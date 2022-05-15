@@ -18,12 +18,16 @@ fn read_file() -> String {
 
 fn extract_links(file_contents: String) -> Vec<NewUrl> {
     let regular_expression = Regex::new("href=\"(?P<Url>.*?)\".*?tags=\"(?P<Tags>.*?)\"").unwrap();
+    let tags_separator: &str = ",";
 
     regular_expression
         .captures_iter(&file_contents)
         .map(|captured| NewUrl {
             url: String::from(&captured["Url"]),
-            tags: captured["Tags"].split(",").map(str::to_string).collect(),
+            tags: captured["Tags"]
+                .split(&tags_separator)
+                .map(str::to_string)
+                .collect(),
         })
         .collect::<Vec<NewUrl>>()
 }

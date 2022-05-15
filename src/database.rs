@@ -11,5 +11,5 @@ pub async fn get_connection() -> DatabaseConnection {
 
     let database_url = env::var("DATABASE_URL").unwrap();
     let connection = Database::connect(database_url).await;
-    return connection.unwrap();
+    connection.unwrap()
 }
