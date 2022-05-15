@@ -1,0 +1,4 @@
+/target
+notae.db*
+*.html
+.env

@@ -1,0 +1,30 @@
+[package]
+name = "notae"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+members = [".", "migration", "entity"]
+
+[dependencies]
+anyhow = { version = "1.0.57", features = ["backtrace", "std"] }
+async-std = { version = "1.11.0", features = ["attributes"] }
+dotenv = { version = "0.15.0", features = ["cli", "clap"] }
+sea-orm = { version = "0.8.0", features = [
+  "sqlx-sqlite",
+  "runtime-tokio-native-tls",
+  "macros",
+  "debug-print",
+] }
+entity = { path = "entity" }
+migration = { path = "migration" }
+regex = "1.5.5"
+clap = "3.1.18"
+dialoguer = { version = "0.10.1", features = ["fuzzy-select", "completion"] }
+nanoid = "0.4.0"
+
+[profile.release]
+strip = true
+opt-level = "z"
+lto = true
+codegen-units = 1
