@@ -1,30 +1,17 @@
-use anyhow::Result;
-use sea_orm::{entity::Set, EntityTrait};
+mod cli;
+mod commands;
+mod data;
 mod database;
 mod import;
+mod settings;
 
-use import::getpocket as GetPocketExtractor;
-
-use entity::prelude::*;
+use anyhow::Result;
+// use data::*;
 
 #[async_std::main]
 async fn main() -> Result<()> {
-    let connection = database::get_connection().await;
-    let getpocket_links = GetPocketExtractor::get_links();
-
-    for link in getpocket_links {
-        let url = UrlActiveModel {
-            url: Set(link.url),
-            ..Default::default()
-        };
-        Url::insert(url).exec(&connection).await.unwrap();
-    }
-
+    cli::get_cli().await;
+    // import().await;
+    // list_all().await;
     Ok(())
-}
-
-pub async fn list_all() {
-    let connection = database::get_connection().await;
-    let urls = Url::find().all(&connection).await;
-    println!("{:#?}", urls);
 }

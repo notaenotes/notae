@@ -1,7 +1,5 @@
 use regex::Regex;
-use std::fs;
-
-const FILENAME: &str = "ril_export.html";
+use std::{fs, path::PathBuf};
 
 #[derive(Debug)]
 pub struct NewUrl {
@@ -9,10 +7,10 @@ pub struct NewUrl {
     pub tags: Vec<String>,
 }
 
-fn read_file() -> String {
-    match fs::read_to_string(FILENAME) {
+fn read_file(filename: &PathBuf) -> String {
+    match fs::read_to_string(filename) {
         Ok(text) => text,
-        Err(err) => err.to_string(),
+        Err(err) => unreachable!("{}", err),
     }
 }
 
@@ -32,7 +30,7 @@ fn extract_links(file_contents: String) -> Vec<NewUrl> {
         .collect::<Vec<NewUrl>>()
 }
 
-pub fn get_links() -> Vec<NewUrl> {
-    let file_contents = read_file();
+pub fn get_links(file_path: &PathBuf) -> Vec<NewUrl> {
+    let file_contents = read_file(file_path);
     extract_links(file_contents)
 }
