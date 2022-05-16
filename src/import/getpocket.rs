@@ -12,7 +12,7 @@ pub struct NewUrl {
 fn read_file() -> String {
     match fs::read_to_string(FILENAME) {
         Ok(text) => text,
-        Err(err) => err.to_string(),
+        Err(err) => panic!("{}", err.to_string()),
     }
 }
 
