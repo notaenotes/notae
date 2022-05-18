@@ -11,7 +11,6 @@ use anyhow::Result;
 #[async_std::main]
 async fn main() -> Result<()> {
     cli::get_cli().await;
-    // import().await;
-    // list_all().await;
+    data::list_all().await;
     Ok(())
 }

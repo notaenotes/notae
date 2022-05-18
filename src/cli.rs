@@ -28,8 +28,6 @@ enum Commands {
 pub async fn get_cli() {
     let cli = Cli::parse();
 
-    // You can check for the existence of subcommands, and if found use their
-    // matches just as you would the top level cmd
     match &cli.command {
         Commands::Import {
             file_path,
@@ -40,7 +38,7 @@ pub async fn get_cli() {
         }
         Commands::Init { force } => {
             println!("{:#?}", force);
-            commands::init::init().await;
+            commands::init::init(force).await;
         }
     }
 }
