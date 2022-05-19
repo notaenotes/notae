@@ -45,7 +45,7 @@ fn generate_connection_string() -> String {
         .unwrap()
         .to_owned();
 
-    let mut connection_string = String::from("sqlite:://");
+    let mut connection_string = String::from("sqlite://");
     connection_string.push_str(&database_directory);
     connection_string.push_str("/notae.db?mode=rwc");
 
