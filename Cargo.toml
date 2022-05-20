@@ -1,6 +1,5 @@
 [workspace]
 members = ["crates/*"]
-exclude = ["crates/migration"]
 
 [profile.release]
 strip = true
