@@ -1,0 +1,29 @@
+[package]
+name = "cli"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+doctest = false
+
+[[bin]]
+name = "cli"
+path = "src/bin/main.rs"
+
+[dependencies]
+regex = "1.5.5"
+clap = { version = "3.1.18", features = ["derive"] }
+dialoguer = { version = "0.10.1", features = ["fuzzy-select", "completion"] }
+anyhow = { version = "1.0.57", features = ["backtrace", "std"] }
+async-std = { version = "1.11.0", features = ["attributes"] }
+sea-orm = { version = "0.8.0", features = [
+  "sqlx-sqlite",
+  "runtime-tokio-native-tls",
+  "macros",
+  "debug-print",
+] }
+
+nanoid = "0.4.0"
+entity = { path = "../entity" }
+common = { path = "../common" }
+migration = { path = "../migration/" }
