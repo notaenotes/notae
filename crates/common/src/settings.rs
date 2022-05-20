@@ -58,7 +58,12 @@ pub fn create_settings_file(file_path: PathBuf, force: &bool) {
     };
 
     let toml_content = toml::to_string(&settings).unwrap();
-    fs::write(file_path, toml_content).unwrap();
+
+    if (file_path.exists() && *force == true) || !file_path.exists() {
+        fs::write(file_path, toml_content).unwrap();
+    } else {
+        println!("The configuration file already exists")
+    }
 }
 
 pub fn get_settings_file() -> PathBuf {

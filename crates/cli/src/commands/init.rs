@@ -1,5 +1,5 @@
-use crate::settings::{get_settings_directory, get_settings_file, DirectoryType};
-use crate::{database, settings};
+use common::settings::{get_settings_directory, get_settings_file, DirectoryType};
+use common::{database, settings};
 use migration::{Migrator, MigratorTrait};
 use std::path::PathBuf;
 
@@ -15,9 +15,8 @@ pub async fn init(force: &bool) {
     if !settings_data_path.exists() {
         settings::create_settings_directory(settings_data_path);
     }
-    if !settings_file_path.exists() {
-        settings::create_settings_file(settings_file_path, force);
-    }
+
+    settings::create_settings_file(settings_file_path, force);
 
     // Get connection and run migrations
     let connection = database::get_connection().await;

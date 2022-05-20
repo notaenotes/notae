@@ -1,4 +1,5 @@
-use crate::{database, import::getpocket::NewUrl};
+use crate::import::getpocket::NewUrl;
+use common::database;
 use entity::prelude::*;
 use sea_orm::{entity::Set, EntityTrait};
 use std::path::PathBuf;
