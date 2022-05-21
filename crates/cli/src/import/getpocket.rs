@@ -23,6 +23,7 @@ fn extract_links(file_contents: String) -> Vec<NewUrl> {
         .map(|captured| NewUrl {
             url: String::from(&captured["Url"]),
             tags: captured["Tags"]
+                .trim()
                 .split(&tags_separator)
                 .map(str::to_string)
                 .collect(),
