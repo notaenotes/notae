@@ -12,6 +12,8 @@ pub enum DirectoryType {
     Data,
 }
 
+pub const APPLICATION_NAME: &str = "notae";
+
 #[allow(non_snake_case)]
 #[derive(Serialize)]
 struct Settings {
@@ -19,7 +21,6 @@ struct Settings {
 }
 
 pub fn get_settings_directory(directory_type: DirectoryType) -> std::path::PathBuf {
-    let crate_name = std::env::var("CARGO_PKG_NAME").unwrap();
     let mut settings_dir_path = match directory_type {
         DirectoryType::Config => dirs::config_dir(),
         DirectoryType::Data => dirs::data_dir(),
@@ -30,13 +31,15 @@ pub fn get_settings_directory(directory_type: DirectoryType) -> std::path::PathB
     .unwrap();
 
     settings_dir_path += "/";
-    settings_dir_path += &crate_name;
+    settings_dir_path += &APPLICATION_NAME;
 
     Path::new(&settings_dir_path).to_owned()
 }
 
-pub fn create_settings_directory(directory_name: PathBuf) {
-    fs::create_dir(directory_name).unwrap();
+pub fn create_settings_directory(directory_name: &PathBuf) {
+    fs::create_dir(directory_name).unwrap_or_else(|error| {
+        panic!("Problem creating the file: {:?}", error);
+    })
 }
 
 fn generate_connection_string() -> String {
@@ -52,18 +55,14 @@ fn generate_connection_string() -> String {
     connection_string
 }
 
-pub fn create_settings_file(file_path: PathBuf, force: &bool) {
+pub fn create_settings_file(file_path: &PathBuf) {
     let settings = Settings {
         DATABASE_URL: generate_connection_string(),
     };
 
     let toml_content = toml::to_string(&settings).unwrap();
 
-    if (file_path.exists() && *force == true) || !file_path.exists() {
-        fs::write(file_path, toml_content).unwrap();
-    } else {
-        println!("The configuration file already exists")
-    }
+    fs::write(file_path, toml_content).unwrap()
 }
 
 pub fn get_settings_file() -> PathBuf {
