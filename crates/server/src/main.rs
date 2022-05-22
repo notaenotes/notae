@@ -1,11 +1,12 @@
 #[macro_use]
 extern crate rocket;
 
-use common::database::get_connection;
-use entity::url::Entity as Url;
 use rocket::serde::json::Json;
 use sea_orm::EntityTrait;
 use sea_orm::JsonValue;
+
+use common::database::get_connection;
+use entity::url::Entity as Url;
 
 #[get("/")]
 async fn hello() -> Json<Vec<JsonValue>> {
