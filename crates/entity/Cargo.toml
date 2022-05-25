@@ -15,3 +15,4 @@ sea-orm = { version = "0.8.0", features = [
   "macros",
   "debug-print",
 ], default-features = false }
+serde = { version = "1.0.137", features = ["serde_derive"] }
