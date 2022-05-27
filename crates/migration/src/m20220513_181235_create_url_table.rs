@@ -30,7 +30,7 @@ impl MigrationTrait for Migration {
                         ColumnDef::new(Column::Hash)
                             .char()
                             .char_len(32)
-                            // .not_null()
+                            .not_null()
                             .unique_key(),
                     )
                     .to_owned(),
