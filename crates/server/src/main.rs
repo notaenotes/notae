@@ -2,7 +2,8 @@
 extern crate rocket;
 
 use common::database::get_connection;
-use rocket::serde::json::{json, Json, Value};
+use entity::url;
+use rocket::serde::json::{json, Value};
 use sea_orm::EntityTrait;
 use sea_orm::JsonValue;
 use serde::Serialize;
@@ -15,21 +16,20 @@ struct UrlTagResponse {
 }
 
 #[get("/url")]
-async fn get_all_urls() -> Json<Vec<JsonValue>> {
+async fn get_all_urls() -> JsonValue {
     let connection = get_connection().await;
-    Json(
-        entity::url::Entity::find()
-            .into_json()
-            .all(&connection)
-            .await
-            .unwrap(),
-    )
+    let model = url::Entity::find()
+        .all(&connection)
+        .await
+        .unwrap_or_default()
+        .to_owned();
+    json!(model)
 }
 
 #[get("/url/<id_url>")]
 async fn get_url_by_id(id_url: i32) -> Value {
     let connection = get_connection().await;
-    let model = entity::url::Entity::find_by_id(id_url)
+    let model = url::Entity::find_by_id(id_url)
         .find_with_related(entity::tag::Entity)
         .all(&connection)
         .await

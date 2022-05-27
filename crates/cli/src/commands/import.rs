@@ -1,8 +1,8 @@
 use crate::import;
 use crate::import::getpocket::NewUrl;
 use common::database;
-use entity::{prelude::*, tag};
-use sea_orm::{entity::Set, ColumnTrait, EntityTrait, QueryFilter};
+use entity::{tag, url, url_tag};
+use sea_orm::{entity::Set, ActiveModelTrait, ColumnTrait, EntityTrait, QueryFilter};
 use std::path::PathBuf;
 
 pub async fn init(file_path: &Option<PathBuf>) {
@@ -14,40 +14,47 @@ async fn insert_captured_links(captured_links: Vec<NewUrl>) {
     let connection = database::get_connection().await;
 
     for link in captured_links {
-        let url = UrlActiveModel {
-            url: Set(link.url),
-            ..Default::default()
-        };
-        let url_insert_res = Url::insert(url).exec(&connection).await.unwrap();
+        let url_hash = format!("{:x}", md5::compute(&link.url));
+        let link_exists_res = url::Entity::find()
+            .filter(url::Column::Hash.eq(url_hash))
+            .one(&connection)
+            .await
+            .unwrap_or_default();
 
-        for link_tag in link.tags {
-            if !link_tag.is_empty() {
-                let tag_exists_res = Tag::find()
-                    .filter(tag::Column::Tag.eq(link_tag.to_owned()))
-                    .one(&connection)
-                    .await
-                    .unwrap();
+        if !link_exists_res.is_some() {
+            let url_active_model = url::ActiveModel {
+                url: Set(link.url),
+                ..Default::default()
+            };
 
-                let tag_id: i32 = if !tag_exists_res.to_owned().is_some() {
-                    let tag = TagActiveModel {
-                        tag: Set(link_tag.to_owned()),
-                        ..Default::default()
+            let url_active_model_res = url_active_model.insert(&connection).await;
+            let url_id = url_active_model_res.unwrap().id;
+
+            for link_tag in link.tags {
+                if !link_tag.is_empty() {
+                    let tag_exists_res = tag::Entity::find()
+                        .filter(tag::Column::Tag.eq(link_tag.to_owned()))
+                        .one(&connection)
+                        .await
+                        .unwrap_or_default();
+
+                    let tag_id: i32 = if !tag_exists_res.to_owned().is_some() {
+                        let tag_active_model = tag::ActiveModel {
+                            tag: Set(link_tag.to_owned()),
+                            ..Default::default()
+                        };
+                        let url_active_model_res = tag_active_model.insert(&connection).await;
+                        url_active_model_res.unwrap().id
+                    } else {
+                        tag_exists_res.unwrap().id
                     };
 
-                    Tag::insert(tag)
-                        .exec(&connection)
-                        .await
-                        .unwrap()
-                        .last_insert_id as i32
-                } else {
-                    tag_exists_res.unwrap().id
-                };
-
-                let url_tag = UrlTagActiveModel {
-                    id_url: Set(url_insert_res.last_insert_id as i32),
-                    id_tag: Set(tag_id),
-                };
-                UrlTag::insert(url_tag).exec(&connection).await.unwrap();
+                    let url_tag_active_model = url_tag::ActiveModel {
+                        id_url: Set(url_id),
+                        id_tag: Set(tag_id),
+                    };
+                    let _url_tag_active_model_res = url_tag_active_model.insert(&connection).await;
+                }
             }
         }
     }
