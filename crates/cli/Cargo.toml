@@ -22,8 +22,9 @@ sea-orm = { version = "0.8.0", features = [
   "macros",
   "debug-print",
 ] }
-
 nanoid = "0.4.0"
+md5 = "0.7.0"
+
 entity = { path = "../entity" }
 common = { path = "../common" }
 migration = { path = "../migration/" }

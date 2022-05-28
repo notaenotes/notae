@@ -162,9 +162,9 @@ dependencies = [
 
 [[package]]
 name = "async-io"
-version = "1.6.0"
+version = "1.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a811e6a479f2439f0c04038796b5cfb3d2ad56c230e0f2d3f7b04d68cfee607b"
+checksum = "e5e18f61464ae81cde0a23e713ae8fd299580c54d697a35820cfd0625b8b0e07"
 dependencies = [
  "concurrent-queue",
  "futures-lite",
@@ -529,6 +529,7 @@ dependencies = [
  "common",
  "dialoguer",
  "entity",
+ "md5",
  "migration",
  "nanoid",
  "regex",
@@ -831,8 +832,10 @@ dependencies = [
 name = "entity"
 version = "0.0.0"
 dependencies = [
+ "md5",
  "sea-orm",
  "serde",
+ "url",
 ]
 
 [[package]]
@@ -1436,6 +1439,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a3e378b66a060d48947b590737b30a1be76706c8dd7b8ba0f2fe3989c68a853f"
 
 [[package]]
+name = "md5"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "490cc448043f947bae3cbee9c203358d62dbee0db12107a74be5c30ccfd09771"
+
+[[package]]
 name = "memchr"
 version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1672,9 +1681,9 @@ dependencies = [
 
 [[package]]
 name = "os_str_bytes"
-version = "6.0.1"
+version = "6.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "029d8d0b2f198229de29dca79676f2738ff952edf3fde542eb8bf94d8c21b435"
+checksum = "21326818e99cfe6ce1e524c2a805c189a99b5ae555a35d19f9a284b427d86afa"
 
 [[package]]
 name = "ouroboros"
@@ -3202,6 +3211,7 @@ dependencies = [
  "idna",
  "matches",
  "percent-encoding",
+ "serde",
 ]
 
 [[package]]

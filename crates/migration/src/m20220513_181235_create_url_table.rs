@@ -26,6 +26,13 @@ impl MigrationTrait for Migration {
                             .primary_key(),
                     )
                     .col(ColumnDef::new(Column::Url).string().not_null().unique_key())
+                    .col(
+                        ColumnDef::new(Column::Hash)
+                            .char()
+                            .char_len(32)
+                            .not_null()
+                            .unique_key(),
+                    )
                     .to_owned(),
             )
             .await
