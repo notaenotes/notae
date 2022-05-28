@@ -832,6 +832,7 @@ dependencies = [
 name = "entity"
 version = "0.0.0"
 dependencies = [
+ "chrono",
  "md5",
  "sea-orm",
  "serde",
@@ -2476,6 +2477,7 @@ name = "server"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "chrono",
  "common",
  "entity",
  "rocket",

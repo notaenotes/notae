@@ -9,6 +9,7 @@ name = "entity"
 path = "src/mod.rs"
 
 [dependencies]
+chrono = "0.4.19"
 md5 = "0.7.0"
 sea-orm = { version = "0.8.0", features = [
   "sqlx-sqlite",

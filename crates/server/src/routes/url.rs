@@ -13,7 +13,7 @@ struct UrlTagResponse {
 }
 
 #[get("/url")]
-pub async fn get_all_urls() -> JsonValue {
+pub async fn get_urls() -> JsonValue {
     let connection = get_connection().await.unwrap_or_default();
     let model = url::Entity::find()
         .all(&connection)

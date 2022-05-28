@@ -17,7 +17,9 @@ pub struct Model {
 }
 
 #[derive(Copy, Clone, Debug, EnumIter)]
-pub enum Relation {}
+pub enum Relation {
+    UrlContent,
+}
 
 impl Related<super::tag::Entity> for Entity {
     fn to() -> RelationDef {
@@ -29,9 +31,16 @@ impl Related<super::tag::Entity> for Entity {
     }
 }
 
+impl Related<super::url_content::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::UrlContent.def()
+    }
+}
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
-        panic!("No RelationDef")
+        match self {
+            Self::UrlContent => Entity::has_many(super::url_content::Entity).into(),
+        }
     }
 }
 

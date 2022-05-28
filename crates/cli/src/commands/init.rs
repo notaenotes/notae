@@ -32,6 +32,6 @@ pub async fn init(force: &bool) {
         settings::create_settings_file(&settings_file_path);
     }
 
-    let connection = database::get_connection().await;
+    let connection = database::get_connection().await.unwrap_or_default();
     Migrator::up(&connection, None).await.unwrap();
 }
