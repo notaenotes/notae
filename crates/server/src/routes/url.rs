@@ -1,6 +1,9 @@
 use common::database::get_connection;
 use entity::url;
-use rocket::serde::json::{json, Value};
+use rocket::{
+    get,
+    serde::json::{json, Value},
+};
 use sea_orm::EntityTrait;
 use sea_orm::JsonValue;
 use serde::Serialize;

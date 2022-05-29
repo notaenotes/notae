@@ -1,8 +1,6 @@
 #[macro_use]
 extern crate rocket;
 
-mod routes;
-
 use rocket::serde::json::{json, Value};
 
 #[catch(404)]
