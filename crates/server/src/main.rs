@@ -1,6 +1,8 @@
 #[macro_use]
 extern crate rocket;
 
+pub mod routes;
+
 use rocket::serde::json::{json, Value};
 
 #[catch(404)]
@@ -19,6 +21,7 @@ async fn rocket() -> _ {
             routes![
                 routes::url::get_urls,
                 routes::url::get_url_by_id,
+                routes::url::url_scrap,
                 routes::tag::get_tags,
                 routes::tag::get_urls_by_tag_id,
             ],

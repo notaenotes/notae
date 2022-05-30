@@ -1,5 +1,6 @@
 use chrono::{DateTime, Utc};
 use sea_orm::entity::prelude::*;
+use sea_orm::ActiveValue::Set;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Serialize, Deserialize)]
@@ -8,6 +9,7 @@ pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
     pub id_url: i32,
+    #[sea_orm(unique)]
     pub hash: String,
     pub content: Vec<u8>,
     pub created_at: DateTime<Utc>,
@@ -34,4 +36,10 @@ impl Related<super::url::Entity> for Entity {
     }
 }
 
-impl ActiveModelBehavior for ActiveModel {}
+impl ActiveModelBehavior for ActiveModel {
+    fn before_save(mut self, _insert: bool) -> Result<Self, DbErr> {
+        self.hash = Set(format!("{:x}", md5::compute(self.content.as_ref())));
+        self.created_at = Set(chrono::Utc::now());
+        Ok(self)
+    }
+}
