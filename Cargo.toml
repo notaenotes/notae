@@ -1,6 +1,7 @@
 [workspace]
 members = ["crates/*"]
 
+
 [profile.release]
 strip = true
 opt-level = "z"
