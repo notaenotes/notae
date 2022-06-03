@@ -1,0 +1,8 @@
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  call-workflow:
+    uses: fabioluciano/notae/.github/workflows/continuous-improvement.yaml
