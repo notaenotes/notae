@@ -1,6 +1,6 @@
 use common::dal::get_entities;
 use common::database::get_connection;
-use entity::{tag, url, url_content};
+use entity::{url, url_content};
 use rocket::{
     get,
     serde::json::{json, Value},
@@ -22,8 +22,12 @@ pub async fn get_urls() -> JsonValue {
 
 #[get("/url/<id_url>")]
 pub async fn get_url_by_id(id_url: i32) -> Value {
-    let model =
-        common::dal::find_entity_by_id_with_related::<url::Entity, tag::Entity>(id_url).await;
+    let connection = get_connection().await.unwrap_or_default();
+    let model = url::Entity::find_by_id_with_related_tags(id_url)
+        .all(&connection)
+        .await
+        .unwrap_or_default()[0]
+        .to_owned();
 
     json!(UrlTagResponse {
         url: model.0,

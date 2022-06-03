@@ -1,4 +1,4 @@
-use sea_orm::{entity::prelude::*, ActiveValue};
+use sea_orm::{entity::prelude::*, ActiveValue::Set, SelectTwoMany};
 use serde::{Deserialize, Serialize};
 use url::Url;
 
@@ -47,10 +47,22 @@ impl RelationTrait for Relation {
 impl ActiveModelBehavior for ActiveModel {
     fn before_save(mut self, insert: bool) -> Result<Self, DbErr> {
         if !Url::parse(self.url.as_ref()).is_ok() {
-            Err(DbErr::Custom(format!("asdas {}", insert)))
+            Err(DbErr::Custom(format!("Is not a valid URL {}", insert)))
         } else {
-            self.hash = ActiveValue::Set(format!("{:x}", md5::compute(self.url.as_ref())));
+            self.hash = Set(format!("{:x}", md5::compute(self.url.as_ref())));
             Ok(self)
         }
+    }
+}
+
+impl Entity {
+    pub fn find_by_hash(hash: &str) -> Select<Entity> {
+        self::Entity::find().filter(self::Column::Hash.eq(hash))
+    }
+
+    pub fn find_by_id_with_related_tags(
+        id: i32,
+    ) -> SelectTwoMany<self::Entity, super::tag::Entity> {
+        self::Entity::find_by_id(id).find_with_related(super::tag::Entity)
     }
 }

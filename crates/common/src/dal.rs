@@ -17,9 +17,9 @@ pub async fn find_entity_by_id<T: EntityTrait>(
         .unwrap()
 }
 
-pub async fn find_entity_by_id_with_related<T: EntityTrait, R: EntityTrait>(
-    id_entity: <T::PrimaryKey as PrimaryKeyTrait>::ValueType,
-) {
-    let connection = get_connection().await.unwrap_or_default();
-    let model = T::find_by_id(id_entity).find_with_related(R);
-}
+// pub async fn find_entity_by_id_with_related<T: EntityTrait, R: EntityTrait>(
+//     id_entity: <T::PrimaryKey as PrimaryKeyTrait>::ValueType,
+// ) {
+//     let connection = get_connection().await.unwrap_or_default();
+//     let model = T::find_by_id(id_entity).find_with_related(R);
+// }
