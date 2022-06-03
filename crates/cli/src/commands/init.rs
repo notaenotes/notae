@@ -17,7 +17,7 @@ pub async fn init(force: &bool) {
         settings::create_settings_directory(&settings_data_path);
     }
 
-    if *force == true && settings_directory_path.exists() {
+    if *force && settings_directory_path.exists() {
         let overwrite_configurations_confirmation = Confirm::with_theme(&ColorfulTheme::default())
             .with_prompt("This option will ERASE all your configurations. Do you want to continue?")
             .default(false)

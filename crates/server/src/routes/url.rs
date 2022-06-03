@@ -49,7 +49,7 @@ pub async fn url_scrap(id_url: i32) {
         .text()
         .await
         .unwrap_or_default();
-    let compressed = smaz::compress(&body.as_bytes());
+    let compressed = smaz::compress(body.as_bytes());
     let url_content_active_model = url_content::ActiveModel {
         id_url: Set(id_url),
         content: Set(compressed.to_owned()),

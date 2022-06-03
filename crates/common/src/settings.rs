@@ -31,7 +31,7 @@ pub fn get_settings_directory(directory_type: DirectoryType) -> std::path::PathB
     .unwrap();
 
     settings_dir_path += "/";
-    settings_dir_path += &APPLICATION_NAME;
+    settings_dir_path += APPLICATION_NAME;
 
     Path::new(&settings_dir_path).to_owned()
 }
