@@ -1,12 +1,12 @@
 use sea_orm_migration::prelude::*;
 
-use entity::url::*;
+use entity::tag::*;
 
 pub struct Migration;
 
 impl MigrationName for Migration {
     fn name(&self) -> &str {
-        "m20220101_000001_create_url_table"
+        "m20220513_182027_create_tags_table"
     }
 }
 
@@ -25,11 +25,17 @@ impl MigrationTrait for Migration {
                             .auto_increment()
                             .primary_key(),
                     )
-                    .col(ColumnDef::new(Column::Url).string().not_null().unique_key())
+                    .col(ColumnDef::new(Column::Tag).string().not_null().unique_key())
                     .col(
                         ColumnDef::new(Column::Hash)
-                            .char()
-                            .char_len(32)
+                            .string()
+                            .string_len(32)
+                            .not_null()
+                            .unique_key(),
+                    )
+                    .col(
+                        ColumnDef::new(Column::Slug)
+                            .string()
                             .not_null()
                             .unique_key(),
                     )

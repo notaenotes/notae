@@ -11,7 +11,7 @@ pub async fn init(file_path: &Option<PathBuf>) {
 }
 
 async fn insert_captured_links(captured_links: Vec<NewUrl>) {
-    let connection = database::get_connection().await;
+    let connection = database::get_connection().await.unwrap_or_default();
 
     for link in captured_links {
         let url_hash = format!("{:x}", md5::compute(&link.url));

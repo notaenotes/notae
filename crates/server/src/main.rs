@@ -1,8 +1,9 @@
 #[macro_use]
 extern crate rocket;
 
+pub mod routes;
+
 use rocket::serde::json::{json, Value};
-mod routes;
 
 #[catch(404)]
 fn not_found() -> Value {
@@ -17,7 +18,13 @@ async fn rocket() -> _ {
     rocket::build()
         .mount(
             "/api",
-            routes![routes::url::get_all_urls, routes::url::get_url_by_id],
+            routes![
+                routes::url::get_urls,
+                routes::url::get_url_by_id,
+                routes::url::url_scrap,
+                routes::tag::get_tags,
+                routes::tag::get_urls_by_tag_id,
+            ],
         )
         .register("/", catchers![not_found])
 }
