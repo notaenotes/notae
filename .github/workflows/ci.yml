@@ -5,4 +5,4 @@ on:
 
 jobs:
   call-workflow:
-    uses: fabioluciano/notae/.github/workflows/continuous-improvement.yaml
+    uses: fabioluciano/notae/.github/workflows/continuous-improvement.yaml@main
