@@ -65,4 +65,8 @@ impl Entity {
     ) -> SelectTwoMany<self::Entity, super::tag::Entity> {
         self::Entity::find_by_id(id).find_with_related(super::tag::Entity)
     }
+
+    pub fn find_by_domain(domain: &str) -> Select<Entity> {
+        self::Entity::find().filter(self::Column::Url.contains(domain))
+    }
 }
