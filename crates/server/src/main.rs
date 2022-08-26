@@ -1,9 +1,9 @@
 #[macro_use]
 extern crate rocket;
 
-pub mod routes;
-
 use rocket::serde::json::{json, Value};
+
+pub mod routes;
 
 #[catch(404)]
 fn not_found() -> Value {

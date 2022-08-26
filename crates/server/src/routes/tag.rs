@@ -11,6 +11,7 @@ struct TagUrlsResponse {
     tag: tag::Model,
     urls: Vec<url::Model>,
 }
+
 #[get("/tag")]
 pub async fn get_tags() -> JsonValue {
     let connection = get_connection().await.unwrap_or_default();

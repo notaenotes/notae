@@ -24,6 +24,8 @@ sea-orm = { version = "0.8.0", features = [
 ] }
 nanoid = "0.4.0"
 md5 = "0.7.0"
+reqwest = "0.11.10"
+url = "2.2.2"
 
 entity = { path = "../entity" }
 common = { path = "../common" }

@@ -14,6 +14,7 @@ jobs:
     steps:
       - name: Check out
         uses: actions/checkout@v3
+
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -21,6 +22,7 @@ jobs:
           toolchain: ${{ inputs.rust-version }}
           override: true
           components: rustfmt, clippy
+
       - name: Set up cargo cache
         uses: actions/cache@v3
         continue-on-error: false
@@ -33,10 +35,12 @@ jobs:
             target/            
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
+
       - name: Lint
         run: |
           cargo fmt --all -- --check
           cargo clippy -- -D warnings          
+
       - name: Install cargo check tools
         run: |
           cargo install --locked cargo-deny || true
@@ -44,6 +48,7 @@ jobs:
           cargo install --locked cargo-udeps || true
           cargo install --locked cargo-audit || true
           cargo install --locked cargo-pants || true          
+
       - name: Check
         run: |
           cargo deny check
@@ -52,5 +57,6 @@ jobs:
           rm -rf ~/.cargo/advisory-db
           cargo audit
           cargo pants          
+
       - name: Test
         run: cargo test

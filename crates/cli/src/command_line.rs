@@ -36,6 +36,11 @@ enum Commands {
         file_path: Option<PathBuf>,
     },
 
+    /// Process a url
+    ///
+    /// Process a url identified by a informed id
+    Process { url_identifier: i32 },
+
     /// List all bookmarks
     ///
     /// List all saved bookmarks
@@ -51,6 +56,9 @@ pub async fn get_cli() {
         } => {
             println!("{:#?}", provider);
             commands::import::init(file_path).await;
+        }
+        Commands::Process { url_identifier } => {
+            commands::process::init(url_identifier).await;
         }
         Commands::Init { force } => {
             commands::init::init(force).await;
