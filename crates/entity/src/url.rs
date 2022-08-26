@@ -2,7 +2,7 @@ use sea_orm::{entity::prelude::*, ActiveValue::Set, SelectTwoMany};
 use serde::{Deserialize, Serialize};
 use url::Url;
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel, Serialize, Deserialize)]
 #[sea_orm(table_name = "urls")]
 pub struct Model {
     #[sea_orm(primary_key)]
@@ -46,7 +46,7 @@ impl RelationTrait for Relation {
 
 impl ActiveModelBehavior for ActiveModel {
     fn before_save(mut self, insert: bool) -> Result<Self, DbErr> {
-        if !Url::parse(self.url.as_ref()).is_ok() {
+        if Url::parse(self.url.as_ref()).is_err() {
             Err(DbErr::Custom(format!("Is not a valid URL {}", insert)))
         } else {
             self.hash = Set(format!("{:x}", md5::compute(self.url.as_ref())));
@@ -64,5 +64,9 @@ impl Entity {
         id: i32,
     ) -> SelectTwoMany<self::Entity, super::tag::Entity> {
         self::Entity::find_by_id(id).find_with_related(super::tag::Entity)
+    }
+
+    pub fn find_by_domain(domain: &str) -> Select<Entity> {
+        self::Entity::find().filter(self::Column::Url.contains(domain))
     }
 }

@@ -21,7 +21,7 @@ async fn insert_captured_links(captured_links: Vec<NewUrl>) {
             .await
             .unwrap_or_default();
 
-        if !link_exists_res.is_some() {
+        if link_exists_res.is_none() {
             let url_active_model = url::ActiveModel {
                 url: Set(link.url),
                 ..Default::default()
@@ -38,7 +38,7 @@ async fn insert_captured_links(captured_links: Vec<NewUrl>) {
                         .await
                         .unwrap_or_default();
 
-                    let tag_id: i32 = if !tag_exists_res.to_owned().is_some() {
+                    let tag_id: i32 = if tag_exists_res.to_owned().is_none() {
                         let tag_active_model = tag::ActiveModel {
                             tag: Set(link_tag.to_owned()),
                             ..Default::default()

@@ -1,6 +1,3 @@
-use common::dal::get_entities;
-use common::database::get_connection;
-use entity::{url, url_content};
 use rocket::{
     get,
     serde::json::{json, Value},
@@ -8,11 +5,15 @@ use rocket::{
 use sea_orm::{ActiveModelTrait, EntityTrait, JsonValue, Set};
 use serde::Serialize;
 
+use common::dal::get_entities;
+use common::database::get_connection;
+use entity::{tag, url, url_content};
+
 #[derive(Serialize, Debug)]
 struct UrlTagResponse {
     #[serde(flatten)]
-    url: entity::url::Model,
-    tags: Vec<entity::tag::Model>,
+    url: url::Model,
+    tags: Vec<tag::Model>,
 }
 
 #[get("/url")]
@@ -35,6 +36,23 @@ pub async fn get_url_by_id(id_url: i32) -> Value {
     })
 }
 
+#[get("/url?<filter>&<filter_query>")]
+pub async fn get_by_filter_and_query(filter: &str, filter_query: &str) -> JsonValue {
+    let model = match filter.trim().to_lowercase().as_str() {
+        "domain" => self::get_by_domain(filter_query).await,
+        _ => panic!("not implemented"),
+    };
+    json!(model)
+}
+
+pub async fn get_by_domain(filter_query: &str) -> Vec<url::Model> {
+    let connection = get_connection().await.unwrap_or_default();
+    url::Entity::find_by_domain(filter_query)
+        .all(&connection)
+        .await
+        .unwrap_or_default()
+}
+
 #[get("/url/<id_url>/get_content")]
 pub async fn url_scrap(id_url: i32) {
     let connection = get_connection().await.unwrap_or_default();
@@ -49,7 +67,7 @@ pub async fn url_scrap(id_url: i32) {
         .text()
         .await
         .unwrap_or_default();
-    let compressed = smaz::compress(&body.as_bytes());
+    let compressed = smaz::compress(body.as_bytes());
     let url_content_active_model = url_content::ActiveModel {
         id_url: Set(id_url),
         content: Set(compressed.to_owned()),
